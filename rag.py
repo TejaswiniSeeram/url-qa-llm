@@ -1,14 +1,14 @@
 # @Author: Dhaval Patel Copyrights Codebasics Inc. and LearnerX Pvt Ltd.
 
 from uuid import uuid4
-from dotenv import load_dotenv # pyright: ignore[reportMissingImports]
+from dotenv import load_dotenv
 from pathlib import Path
-from langchain_community.document_loaders import WebBaseLoader # pyright: ignore[reportMissingImports]
-from langchain_text_splitters import RecursiveCharacterTextSplitter # pyright: ignore[reportMissingImports]
+from langchain_community.document_loaders import WebBaseLoader
+from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_chroma import Chroma # pyright: ignore[reportMissingImports]
-from langchain_groq import ChatGroq # pyright: ignore[reportMissingImports]
+from langchain_groq import ChatGroq
 from langchain_huggingface.embeddings import HuggingFaceEmbeddings # pyright: ignore[reportMissingImports]
-
+from prompt import REAL_ESTATE_PROMPT
 load_dotenv()
 import os
 os.environ["USER_AGENT"] = "Mozilla/5.0"
@@ -80,14 +80,7 @@ def generate_answer(query):
 
     context = "\n\n".join([doc.page_content for doc in docs])
 
-    prompt = f"""
-        Answer the question using the context below.
-
-        Context:
-        {context}
-
-        Question: {query}
-        """
+    prompt = REAL_ESTATE_PROMPT.format(context=context, query=query)
 
     response = llm.invoke(prompt)
 
